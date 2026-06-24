@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { checkAdmin, claimFirstAdmin } from "@/lib/admin.functions";
 
-export const Route = createFileRoute("/admin")({
+export const Route = createFileRoute("/admin/")({
   ssr: false,
   head: () => ({ meta: [{ title: "Admin · DecisionPilot AI" }, { name: "robots", content: "noindex" }] }),
   component: AdminGate,
