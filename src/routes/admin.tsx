@@ -18,7 +18,6 @@ type Appointment = {
   full_name: string;
   work_email: string;
   company_name: string;
-  preferred_date_time: string;
   requirements: string | null;
   status: string;
 };
@@ -114,7 +113,7 @@ function AdminPage() {
                         <Th>Name</Th>
                         <Th>Company</Th>
                         <Th>Email</Th>
-                        <Th>Requested Time</Th>
+                        <Th>Submitted</Th>
                         <Th>Notes</Th>
                         <Th>Status</Th>
                       </tr>
@@ -128,7 +127,7 @@ function AdminPage() {
                           </Td>
                           <Td><span className="inline-flex items-center gap-1.5 text-slate-300"><Building2 className="h-3.5 w-3.5 text-slate-500" />{r.company_name}</span></Td>
                           <Td><a href={`mailto:${r.work_email}`} className="inline-flex items-center gap-1.5 text-cyan-300 hover:text-cyan-200"><Mail className="h-3.5 w-3.5" />{r.work_email}</a></Td>
-                          <Td className="whitespace-nowrap text-slate-300">{new Date(r.preferred_date_time).toLocaleString()}</Td>
+                          <Td className="whitespace-nowrap text-slate-300">{new Date(r.created_at).toLocaleString()}</Td>
                           <Td>
                             <div className="max-w-xs flex items-start gap-1.5 text-slate-400 text-xs">
                               <FileText className="h-3.5 w-3.5 mt-0.5 shrink-0 text-slate-600" />

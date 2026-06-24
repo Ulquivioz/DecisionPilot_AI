@@ -13,10 +13,6 @@ const schema = z.object({
   full_name: z.string().trim().min(1, "Required").max(100),
   work_email: z.string().trim().email("Invalid email").max(255),
   company_name: z.string().trim().min(1, "Required").max(100),
-  preferred_date_time: z.string().refine((v) => {
-    const d = new Date(v);
-    return !isNaN(d.getTime()) && d.getTime() > Date.now();
-  }, "Pick a future date & time"),
   requirements: z.string().trim().max(1000).optional(),
 });
 
@@ -32,7 +28,6 @@ export function AppointmentModal({
     full_name: "",
     work_email: "",
     company_name: "",
-    preferred_date_time: "",
     requirements: "",
   });
 
@@ -48,7 +43,6 @@ export function AppointmentModal({
       full_name: parsed.data.full_name,
       work_email: parsed.data.work_email,
       company_name: parsed.data.company_name,
-      preferred_date_time: new Date(parsed.data.preferred_date_time).toISOString(),
       requirements: parsed.data.requirements || null,
     });
     setSubmitting(false);
@@ -57,11 +51,9 @@ export function AppointmentModal({
       return;
     }
     toast.success("Appointment booked! We'll be in touch shortly.");
-    setForm({ full_name: "", work_email: "", company_name: "", preferred_date_time: "", requirements: "" });
+    setForm({ full_name: "", work_email: "", company_name: "", requirements: "" });
     onOpenChange(false);
   };
-
-  const minDateTime = new Date(Date.now() + 5 * 60 * 1000).toISOString().slice(0, 16);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -103,15 +95,6 @@ export function AppointmentModal({
               value={form.company_name}
               onChange={(e) => setForm({ ...form, company_name: e.target.value })}
               className="bg-slate-950/60 border-white/10 text-slate-100"
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="preferred_date_time" className="text-slate-300">Preferred Date & Time</Label>
-            <Input
-              id="preferred_date_time" type="datetime-local" required min={minDateTime}
-              value={form.preferred_date_time}
-              onChange={(e) => setForm({ ...form, preferred_date_time: e.target.value })}
-              className="bg-slate-950/60 border-white/10 text-slate-100 [color-scheme:dark]"
             />
           </div>
           <div className="grid gap-2">
