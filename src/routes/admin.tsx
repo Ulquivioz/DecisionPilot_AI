@@ -60,7 +60,7 @@ function AdminGate() {
 
   useEffect(() => {
     if (state.status === "unauthenticated") {
-      navigate({ to: "/auth" });
+      navigate({ to: "/admin/login" });
     }
   }, [state.status, navigate]);
 
