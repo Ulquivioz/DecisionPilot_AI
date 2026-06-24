@@ -92,11 +92,7 @@ function AdminPage() {
             </div>
           )}
 
-          {view === "settings" && (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8 text-slate-400">
-              Settings coming soon.
-            </div>
-          )}
+          {view === "settings" && <SettingsPanel />}
 
           {view === "appointments" && (
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden">
