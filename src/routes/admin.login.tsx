@@ -17,7 +17,6 @@ export const Route = createFileRoute("/admin/login")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -32,18 +31,8 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: window.location.origin + "/admin" },
-        });
-        if (error) throw error;
-        toast.success("Account created. Check your email if confirmation is required.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
       navigate({ to: "/admin" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Authentication failed");
@@ -67,9 +56,7 @@ function AuthPage() {
         <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-6 shadow-[0_0_60px_-15px_rgba(99,102,241,0.35)]">
           <div className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-500/10" />
           <div className="relative">
-            <h1 className="text-xl font-semibold">
-              {mode === "signin" ? "Admin Login" : "Create admin account"}
-            </h1>
+            <h1 className="text-xl font-semibold">Admin Login</h1>
             <p className="mt-1 text-sm text-slate-400">
               Secure access to the DecisionPilot AI admin console.
             </p>
@@ -90,7 +77,7 @@ function AuthPage() {
                 <label className="block text-xs font-medium text-slate-300 mb-1.5">Password</label>
                 <input
                   type="password"
-                  autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                  autoComplete="current-password"
                   required
                   minLength={6}
                   value={password}
@@ -104,27 +91,10 @@ function AuthPage() {
                 className="relative w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 to-cyan-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_25px_-5px_rgba(34,211,238,0.6)] hover:shadow-[0_0_35px_-5px_rgba(34,211,238,0.85)] transition-shadow disabled:opacity-60"
               >
                 {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-                {mode === "signin" ? "Login as Admin" : "Create account"}
+                Login as Admin
               </button>
             </form>
 
-          <div className="mt-4 text-center text-xs text-slate-400">
-            {mode === "signin" ? (
-              <>
-                No account?{" "}
-                <button onClick={() => setMode("signup")} className="text-cyan-300 hover:text-cyan-200">
-                  Create one
-                </button>
-              </>
-            ) : (
-              <>
-                Have an account?{" "}
-                <button onClick={() => setMode("signin")} className="text-cyan-300 hover:text-cyan-200">
-                  Sign in
-                </button>
-              </>
-            )}
-          </div>
           </div>
         </div>
       </div>
