@@ -130,10 +130,8 @@ function AdminGate() {
     );
   }
 
-  return <AdminPage email={state.email} />;
+  return <AdminPageInner email={state.email} />;
 }
-
-function AdminPage({ email }: { email: string | null }) {
 
 type Appointment = {
   id: string;
