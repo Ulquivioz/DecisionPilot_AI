@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { BrainCircuit, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth")({
+export const Route = createFileRoute("/admin/login")({
   ssr: false,
   head: () => ({
     meta: [
