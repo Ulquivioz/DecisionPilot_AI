@@ -1,18 +1,139 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { BrainCircuit, LayoutDashboard, CalendarCheck2, Settings, Loader2, Mail, Building2, Clock, FileText, Users, TrendingUp } from "lucide-react";
+import { BrainCircuit, LayoutDashboard, CalendarCheck2, Settings, Loader2, Mail, Building2, Clock, FileText, Users, TrendingUp, LogOut, ShieldAlert, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SettingsPanel } from "@/components/admin/SettingsPanel";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { checkAdmin, claimFirstAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
   head: () => ({ meta: [{ title: "Admin · DecisionPilot AI" }, { name: "robots", content: "noindex" }] }),
-  component: AdminPage,
+  component: AdminGate,
 });
+
+type GateState =
+  | { status: "loading" }
+  | { status: "unauthenticated" }
+  | { status: "forbidden"; email: string | null }
+  | { status: "ok"; email: string | null };
+
+function AdminGate() {
+  const navigate = useNavigate();
+  const router = useRouter();
+  const [state, setState] = useState<GateState>({ status: "loading" });
+  const [claiming, setClaiming] = useState(false);
+  const check = useServerFn(checkAdmin);
+  const claim = useServerFn(claimFirstAdmin);
+
+  const evaluate = async () => {
+    setState({ status: "loading" });
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      setState({ status: "unauthenticated" });
+      return;
+    }
+    try {
+      const { isAdmin } = await check();
+      setState(
+        isAdmin
+          ? { status: "ok", email: session.user.email ?? null }
+          : { status: "forbidden", email: session.user.email ?? null }
+      );
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Authorization check failed");
+      setState({ status: "forbidden", email: session.user.email ?? null });
+    }
+  };
+
+  useEffect(() => {
+    evaluate();
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT") evaluate();
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (state.status === "unauthenticated") {
+      navigate({ to: "/auth" });
+    }
+  }, [state.status, navigate]);
+
+  if (state.status === "loading" || state.status === "unauthenticated") {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 grid place-items-center">
+        <div className="flex items-center gap-2 text-slate-400 text-sm">
+          <Loader2 className="h-4 w-4 animate-spin" /> Checking access…
+        </div>
+      </div>
+    );
+  }
+
+  if (state.status === "forbidden") {
+    const onClaim = async () => {
+      setClaiming(true);
+      try {
+        const res = await claim();
+        if (res.granted) {
+          toast.success("You are now the admin.");
+          await evaluate();
+        } else {
+          toast.error("An admin already exists. Ask them to grant you access.");
+        }
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not claim admin");
+      } finally {
+        setClaiming(false);
+      }
+    };
+    const onSignOut = async () => {
+      await supabase.auth.signOut();
+      router.invalidate();
+    };
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 grid place-items-center px-4">
+        <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-6 text-center">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-red-500/10 border border-red-500/20 mb-4">
+            <ShieldAlert className="h-6 w-6 text-red-400" />
+          </div>
+          <h1 className="text-lg font-semibold">Not authorized</h1>
+          <p className="mt-2 text-sm text-slate-400">
+            You are signed in as <span className="text-slate-200">{state.email}</span>, but this account does not have the admin role.
+          </p>
+          <div className="mt-5 flex flex-col gap-2">
+            <button
+              onClick={onClaim}
+              disabled={claiming}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 to-cyan-500 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+            >
+              {claiming ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
+              Claim admin (first user only)
+            </button>
+            <button
+              onClick={onSignOut}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-200 hover:bg-white/5"
+            >
+              <LogOut className="h-4 w-4" /> Sign out
+            </button>
+            <Link to="/" className="text-xs text-slate-500 hover:text-slate-300 mt-1">← Back to site</Link>
+          </div>
+          <p className="mt-4 text-[11px] text-slate-500">
+            The "Claim admin" button only works while no admin exists in the system.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return <AdminPage email={state.email} />;
+}
+
+function AdminPage({ email }: { email: string | null }) {
 
 type Appointment = {
   id: string;
