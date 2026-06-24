@@ -8,6 +8,7 @@ import {
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin")({
+  ssr: false,
   head: () => ({ meta: [{ title: "Admin · DecisionPilot AI" }, { name: "robots", content: "noindex" }] }),
   component: AdminPage,
 });
