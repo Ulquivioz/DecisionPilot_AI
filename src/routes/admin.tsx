@@ -145,7 +145,7 @@ type Appointment = {
   status: string;
 };
 
-function AdminPage() {
+function AdminPageInner({ email }: { email: string | null }) {
   const [view, setView] = useState<"dashboard" | "appointments" | "settings">("appointments");
   const [rows, setRows] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
