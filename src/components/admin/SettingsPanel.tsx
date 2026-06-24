@@ -7,9 +7,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export function SettingsPanel() {
-  const [provider, setProvider] = useState("openai");
-  const [apiKey, setApiKey] = useState("");
-  const [retention, setRetention] = useState("90");
   const [notifyAppointments, setNotifyAppointments] = useState(true);
   const [notifySystem, setNotifySystem] = useState(false);
   const [name, setName] = useState("Admin User");
@@ -17,77 +14,6 @@ export function SettingsPanel() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      {/* AI Configuration */}
-      <GlassCard
-        icon={<Cpu className="h-5 w-5 text-cyan-300" />}
-        title="AI Configuration"
-        description="Choose the model that powers your decisions."
-      >
-        <Field label="Model Provider">
-          <Select value={provider} onValueChange={setProvider}>
-            <SelectTrigger className="bg-slate-950/60 border-white/10 text-slate-100">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-slate-900 border-white/10 text-slate-100">
-              <SelectItem value="openai">OpenAI · GPT-4o</SelectItem>
-              <SelectItem value="anthropic">Anthropic · Claude 3.5</SelectItem>
-              <SelectItem value="google">Google · Gemini 1.5 Pro</SelectItem>
-              <SelectItem value="mistral">Mistral · Large</SelectItem>
-            </SelectContent>
-          </Select>
-        </Field>
-        <Field label="API Key" icon={<KeyRound className="h-3.5 w-3.5" />}>
-          <Input
-            type="password"
-            placeholder="sk-••••••••••••••••••••"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            className="bg-slate-950/60 border-white/10 text-slate-100 placeholder:text-slate-600"
-          />
-          <p className="text-xs text-slate-500 mt-2">Stored encrypted. Never exposed to the browser.</p>
-        </Field>
-        <SaveButton onClick={() => toast.success("AI configuration saved")} />
-      </GlassCard>
-
-      {/* Data & Privacy */}
-      <GlassCard
-        icon={<Database className="h-5 w-5 text-cyan-300" />}
-        title="Data & Privacy"
-        description="Control how long your data lives in our systems."
-      >
-        <Field label="Data Retention">
-          <Select value={retention} onValueChange={setRetention}>
-            <SelectTrigger className="bg-slate-950/60 border-white/10 text-slate-100">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-slate-900 border-white/10 text-slate-100">
-              <SelectItem value="30">30 days</SelectItem>
-              <SelectItem value="90">90 days</SelectItem>
-              <SelectItem value="180">6 months</SelectItem>
-              <SelectItem value="365">1 year</SelectItem>
-              <SelectItem value="forever">Indefinite</SelectItem>
-            </SelectContent>
-          </Select>
-        </Field>
-        <div className="mt-6 rounded-xl border border-red-500/20 bg-red-500/[0.04] p-4">
-          <div className="flex items-start gap-3">
-            <ShieldAlert className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <div className="text-sm font-semibold text-red-200">Danger zone</div>
-              <p className="text-xs text-slate-400 mt-1">
-                Permanently delete all embeddings, documents, and training data. This cannot be undone.
-              </p>
-            </div>
-          </div>
-          <Button
-            onClick={() => toast.error("Knowledge base cleared (demo)")}
-            className="mt-4 w-full bg-red-500/90 hover:bg-red-500 text-white border border-red-400/30"
-          >
-            <Trash2 className="h-4 w-4" />
-            Clear Knowledge Base
-          </Button>
-        </div>
-      </GlassCard>
 
       {/* Notifications */}
       <GlassCard
