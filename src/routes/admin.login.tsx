@@ -64,45 +64,49 @@ function AuthPage() {
           </span>
         </Link>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-6">
-          <h1 className="text-xl font-semibold">
-            {mode === "signin" ? "Sign in" : "Create account"}
-          </h1>
-          <p className="mt-1 text-sm text-slate-400">
-            Admin access to <code className="text-cyan-300">/admin</code> requires an admin role.
-          </p>
+        <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-6 shadow-[0_0_60px_-15px_rgba(99,102,241,0.35)]">
+          <div className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-500/10" />
+          <div className="relative">
+            <h1 className="text-xl font-semibold">
+              {mode === "signin" ? "Admin Login" : "Create admin account"}
+            </h1>
+            <p className="mt-1 text-sm text-slate-400">
+              Secure access to the DecisionPilot AI admin console.
+            </p>
 
-          <form onSubmit={onSubmit} className="mt-6 space-y-4">
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Email</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg bg-slate-950/60 border border-white/10 px-3 py-2 text-sm outline-none focus:border-cyan-400/40"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">Password</label>
-              <input
-                type="password"
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg bg-slate-950/60 border border-white/10 px-3 py-2 text-sm outline-none focus:border-cyan-400/40"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={busy}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 to-cyan-500 px-4 py-2.5 text-sm font-medium text-white disabled:opacity-60"
-            >
-              {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-              {mode === "signin" ? "Sign in" : "Sign up"}
-            </button>
-          </form>
+            <form onSubmit={onSubmit} className="mt-6 space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1.5">Email</label>
+                <input
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full rounded-lg bg-slate-950/60 border border-white/10 px-3 py-2.5 text-sm outline-none focus:border-cyan-400/40 focus:ring-1 focus:ring-cyan-400/30"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1.5">Password</label>
+                <input
+                  type="password"
+                  autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                  required
+                  minLength={6}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full rounded-lg bg-slate-950/60 border border-white/10 px-3 py-2.5 text-sm outline-none focus:border-cyan-400/40 focus:ring-1 focus:ring-cyan-400/30"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={busy}
+                className="relative w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 to-cyan-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_25px_-5px_rgba(34,211,238,0.6)] hover:shadow-[0_0_35px_-5px_rgba(34,211,238,0.85)] transition-shadow disabled:opacity-60"
+              >
+                {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+                {mode === "signin" ? "Login as Admin" : "Create account"}
+              </button>
+            </form>
 
           <div className="mt-4 text-center text-xs text-slate-400">
             {mode === "signin" ? (
