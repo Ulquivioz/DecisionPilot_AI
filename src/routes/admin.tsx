@@ -193,23 +193,26 @@ function AdminPageInner({ email }: { email: string | null }) {
           <SideItem active={view === "appointments"} onClick={() => setView("appointments")} icon={<CalendarCheck2 className="h-4 w-4" />} label="Appointments" />
           <SideItem active={view === "settings"} onClick={() => setView("settings")} icon={<Settings className="h-4 w-4" />} label="Settings" />
         </nav>
-        <div className="mt-auto p-4 text-xs text-slate-500 border-t border-white/5">Admin Console</div>
+        <div className="mt-auto p-3 border-t border-white/5 space-y-2">
+          {email && (
+            <div className="px-3 py-2 text-xs text-slate-400 truncate" title={email}>
+              {email}
+            </div>
+          )}
+          <button
+            onClick={async () => { await supabase.auth.signOut(); }}
+            className="w-full inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-white/5 hover:text-white transition"
+          >
+            <LogOut className="h-4 w-4" /> Logout
+          </button>
+        </div>
       </aside>
 
       {/* Main */}
       <main className="flex-1 min-w-0">
         <header className="border-b border-white/5 px-6 py-4 flex items-center justify-between gap-4">
           <h1 className="text-xl font-semibold capitalize">{view}</h1>
-          <div className="flex items-center gap-3 text-xs">
-            {email && <span className="text-slate-400 hidden sm:inline">{email}</span>}
-            <button
-              onClick={async () => { await supabase.auth.signOut(); }}
-              className="inline-flex items-center gap-1.5 rounded-md border border-white/10 px-2.5 py-1.5 text-slate-300 hover:bg-white/5"
-            >
-              <LogOut className="h-3.5 w-3.5" /> Sign out
-            </button>
-            <Link to="/" className="text-slate-400 hover:text-white">← Back to site</Link>
-          </div>
+          <Link to="/" className="text-xs text-slate-400 hover:text-white">← Back to site</Link>
         </header>
 
         <div className="p-6">
