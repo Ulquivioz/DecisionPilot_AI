@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { BrainCircuit, LayoutDashboard, CalendarCheck2, Settings, Loader2, Mail, Building2, Clock, FileText, Users, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { SettingsPanel } from "@/components/admin/SettingsPanel";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -92,11 +93,7 @@ function AdminPage() {
             </div>
           )}
 
-          {view === "settings" && (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8 text-slate-400">
-              Settings coming soon.
-            </div>
-          )}
+          {view === "settings" && <SettingsPanel />}
 
           {view === "appointments" && (
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden">
