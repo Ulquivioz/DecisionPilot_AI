@@ -106,6 +106,36 @@ export function AppointmentModal({
               className="bg-slate-950/60 border-white/10 text-slate-100"
             />
           </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-2">
+              <Label htmlFor="preferred_date" className="text-slate-300">Preferred Date</Label>
+              <Input
+                id="preferred_date" type="date" required
+                value={form.preferred_date}
+                onChange={(e) => setForm({ ...form, preferred_date: e.target.value })}
+                className="bg-slate-950/60 border-white/10 text-slate-100"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="preferred_time" className="text-slate-300">Preferred Time</Label>
+              <Input
+                id="preferred_time" type="time" required
+                value={form.preferred_time}
+                onChange={(e) => setForm({ ...form, preferred_time: e.target.value })}
+                className="bg-slate-950/60 border-white/10 text-slate-100"
+              />
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="place" className="text-slate-300">Place / Location</Label>
+            <Input
+              id="place" required maxLength={300}
+              placeholder="e.g. Google Meet, Zoom, or office address"
+              value={form.place}
+              onChange={(e) => setForm({ ...form, place: e.target.value })}
+              className="bg-slate-950/60 border-white/10 text-slate-100"
+            />
+          </div>
           <div className="grid gap-2">
             <Label htmlFor="requirements" className="text-slate-300">Brief Note / Requirements</Label>
             <Textarea
