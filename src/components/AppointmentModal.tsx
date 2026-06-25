@@ -13,6 +13,9 @@ const schema = z.object({
   full_name: z.string().trim().min(1, "Required").max(100),
   work_email: z.string().trim().email("Invalid email").max(255),
   company_name: z.string().trim().min(1, "Required").max(100),
+  preferred_date: z.string().min(1, "Pick a date"),
+  preferred_time: z.string().min(1, "Pick a time"),
+  place: z.string().trim().min(1, "Required").max(300),
   requirements: z.string().trim().max(1000).optional(),
 });
 
