@@ -13,6 +13,9 @@ const schema = z.object({
   full_name: z.string().trim().min(1, "Required").max(100),
   work_email: z.string().trim().email("Invalid email").max(255),
   company_name: z.string().trim().min(1, "Required").max(100),
+  preferred_date: z.string().min(1, "Pick a date"),
+  preferred_time: z.string().min(1, "Pick a time"),
+  place: z.string().trim().min(1, "Required").max(300),
   requirements: z.string().trim().max(1000).optional(),
 });
 
@@ -28,6 +31,9 @@ export function AppointmentModal({
     full_name: "",
     work_email: "",
     company_name: "",
+    preferred_date: "",
+    preferred_time: "",
+    place: "",
     requirements: "",
   });
 
@@ -39,10 +45,13 @@ export function AppointmentModal({
       return;
     }
     setSubmitting(true);
+    const preferred = new Date(`${parsed.data.preferred_date}T${parsed.data.preferred_time}`);
     const { error } = await supabase.from("appointments").insert({
       full_name: parsed.data.full_name,
       work_email: parsed.data.work_email,
       company_name: parsed.data.company_name,
+      preferred_date_time: isNaN(preferred.getTime()) ? null : preferred.toISOString(),
+      place: parsed.data.place,
       requirements: parsed.data.requirements || null,
     });
     setSubmitting(false);
@@ -51,7 +60,7 @@ export function AppointmentModal({
       return;
     }
     toast.success("Appointment booked! We'll be in touch shortly.");
-    setForm({ full_name: "", work_email: "", company_name: "", requirements: "" });
+    setForm({ full_name: "", work_email: "", company_name: "", preferred_date: "", preferred_time: "", place: "", requirements: "" });
     onOpenChange(false);
   };
 
@@ -94,6 +103,36 @@ export function AppointmentModal({
               id="company_name" required maxLength={100}
               value={form.company_name}
               onChange={(e) => setForm({ ...form, company_name: e.target.value })}
+              className="bg-slate-950/60 border-white/10 text-slate-100"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-2">
+              <Label htmlFor="preferred_date" className="text-slate-300">Preferred Date</Label>
+              <Input
+                id="preferred_date" type="date" required
+                value={form.preferred_date}
+                onChange={(e) => setForm({ ...form, preferred_date: e.target.value })}
+                className="bg-slate-950/60 border-white/10 text-slate-100"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="preferred_time" className="text-slate-300">Preferred Time</Label>
+              <Input
+                id="preferred_time" type="time" required
+                value={form.preferred_time}
+                onChange={(e) => setForm({ ...form, preferred_time: e.target.value })}
+                className="bg-slate-950/60 border-white/10 text-slate-100"
+              />
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="place" className="text-slate-300">Place / Location</Label>
+            <Input
+              id="place" required maxLength={300}
+              placeholder="e.g. Google Meet, Zoom, or office address"
+              value={form.place}
+              onChange={(e) => setForm({ ...form, place: e.target.value })}
               className="bg-slate-950/60 border-white/10 text-slate-100"
             />
           </div>

@@ -139,6 +139,8 @@ type Appointment = {
   full_name: string;
   work_email: string;
   company_name: string;
+  preferred_date_time: string | null;
+  place: string | null;
   requirements: string | null;
   status: string;
 };
