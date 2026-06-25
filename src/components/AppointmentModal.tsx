@@ -14,7 +14,7 @@ const schema = z.object({
   work_email: z.string().trim().email("Invalid email").max(255),
   company_name: z.string().trim().min(1, "Required").max(100),
   preferred_date: z.string().min(1, "Pick a date"),
-  preferred_time: z.string().min(1, "Pick a time"),
+  preferred_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Use HH:MM format (e.g. 14:30)"),
   place: z.string().trim().min(1, "Required").max(300),
   requirements: z.string().trim().max(1000).optional(),
 });
