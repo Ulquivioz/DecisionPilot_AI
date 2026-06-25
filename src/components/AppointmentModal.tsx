@@ -119,7 +119,10 @@ export function AppointmentModal({
             <div className="grid gap-2">
               <Label htmlFor="preferred_time" className="text-slate-300">Preferred Time</Label>
               <Input
-                id="preferred_time" type="time" step="60" required
+                id="preferred_time" type="text" required
+                placeholder="HH:MM"
+                pattern="[0-9]{2}:[0-9]{2}"
+                maxLength={5}
                 value={form.preferred_time}
                 onChange={(e) => setForm({ ...form, preferred_time: e.target.value })}
                 className="bg-slate-950/60 border-white/10 text-slate-100"
