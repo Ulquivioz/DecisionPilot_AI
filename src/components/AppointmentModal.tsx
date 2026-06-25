@@ -31,6 +31,9 @@ export function AppointmentModal({
     full_name: "",
     work_email: "",
     company_name: "",
+    preferred_date: "",
+    preferred_time: "",
+    place: "",
     requirements: "",
   });
 
@@ -42,10 +45,13 @@ export function AppointmentModal({
       return;
     }
     setSubmitting(true);
+    const preferred = new Date(`${parsed.data.preferred_date}T${parsed.data.preferred_time}`);
     const { error } = await supabase.from("appointments").insert({
       full_name: parsed.data.full_name,
       work_email: parsed.data.work_email,
       company_name: parsed.data.company_name,
+      preferred_date_time: isNaN(preferred.getTime()) ? null : preferred.toISOString(),
+      place: parsed.data.place,
       requirements: parsed.data.requirements || null,
     });
     setSubmitting(false);
@@ -54,7 +60,7 @@ export function AppointmentModal({
       return;
     }
     toast.success("Appointment booked! We'll be in touch shortly.");
-    setForm({ full_name: "", work_email: "", company_name: "", requirements: "" });
+    setForm({ full_name: "", work_email: "", company_name: "", preferred_date: "", preferred_time: "", place: "", requirements: "" });
     onOpenChange(false);
   };
 
