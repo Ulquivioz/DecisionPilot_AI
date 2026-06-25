@@ -14,7 +14,7 @@ const schema = z.object({
   work_email: z.string().trim().email("Invalid email").max(255),
   company_name: z.string().trim().min(1, "Required").max(100),
   preferred_date: z.string().min(1, "Pick a date"),
-  preferred_time: z.string().min(1, "Pick a time"),
+  preferred_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Use HH:MM format (e.g. 14:30)"),
   place: z.string().trim().min(1, "Required").max(300),
   requirements: z.string().trim().max(1000).optional(),
 });
@@ -119,7 +119,10 @@ export function AppointmentModal({
             <div className="grid gap-2">
               <Label htmlFor="preferred_time" className="text-slate-300">Preferred Time</Label>
               <Input
-                id="preferred_time" type="time" step="60" required
+                id="preferred_time" type="text" required
+                placeholder="HH:MM"
+                pattern="[0-9]{2}:[0-9]{2}"
+                maxLength={5}
                 value={form.preferred_time}
                 onChange={(e) => setForm({ ...form, preferred_time: e.target.value })}
                 className="bg-slate-950/60 border-white/10 text-slate-100"
