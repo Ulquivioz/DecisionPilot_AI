@@ -20,6 +20,7 @@ export type Database = {
           created_at: string
           full_name: string
           id: string
+          place: string | null
           preferred_date_time: string | null
           requirements: string | null
           status: string
@@ -30,6 +31,7 @@ export type Database = {
           created_at?: string
           full_name: string
           id?: string
+          place?: string | null
           preferred_date_time?: string | null
           requirements?: string | null
           status?: string
@@ -40,6 +42,7 @@ export type Database = {
           created_at?: string
           full_name?: string
           id?: string
+          place?: string | null
           preferred_date_time?: string | null
           requirements?: string | null
           status?: string
